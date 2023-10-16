@@ -1,4 +1,5 @@
-import axios, { AxiosInstance } from 'axios'
+import axios,
+     { AxiosInstance } from 'axios'
 import * as dotenv from 'dotenv'
 
 dotenv.config()
