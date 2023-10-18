@@ -5,21 +5,19 @@ import { useAppDispatch, useAppSelector } from './app/hooks'
 import Header from './components/partials/Header'
 import Form from './components/shared/Form'
 
-function App() {
+const App:React.FC = () => {
   const dispatch = useAppDispatch()
   
   return (
-    <>
+    <>    
     <div className='bg-[#F9F9FA]'>
-      <Header />
+    <Header />
       <main 
-        className='container flex' 
+        className='flex mx-auto' 
         style={{justifyContent:'center'}}>
         <Form />
       </main>
     </div>
-   
-   
     </>
   )
 }
