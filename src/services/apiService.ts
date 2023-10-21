@@ -1,15 +1,13 @@
 import axios,
-     { AxiosInstance } from 'axios'
-import * as dotenv from 'dotenv'
+{ AxiosInstance } from 'axios'
 
-dotenv.config()
+const apiUrl = import.meta.env.PROD
+        ? import.meta.env.VITE_APP_API_URL_HEROKU
+        : import.meta.env.VITE_APP_API_URL_LOCAL
 
-const apiUrl =
-    process.env.NODE_ENV
-    ? process.env.REACT_APP_API_URL_HEROKU
-    : process.env.REACT_APP_API_URL_LOCAL
+console.log(import.meta.env.VITE_APP_API_URL_HEROKU)
 
 export const apiService: AxiosInstance = axios.create({
-    baseURL:apiUrl,
-    withCredentials:true
+    baseURL: apiUrl,
+    withCredentials: true
 })
