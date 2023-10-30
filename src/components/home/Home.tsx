@@ -1,16 +1,11 @@
-import Header from '../partials/Header'
-import Form from '../../components/shared/Form'
+import Form from "../shared/form/Form";
 
-const Home = () => {
+const Home: React.FC = (): React.JSX.Element => {
   return (
-    <div className="bg-[#F9F9FA]">
-    <Header />
-    <main className="flex mx-auto" 
-          style={{ justifyContent: "center" }}>
-      <Form  />
+    <main className="flex mx-auto" style={{ justifyContent: "center" }}>
+      <Form formType="login" />
     </main>
-</div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

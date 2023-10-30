@@ -1,19 +1,17 @@
-import { useState } from "react";
-import { useAppSelector } from "./app/hooks/hooks";
-import {BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Profile from "./components/profile/Profile";
-import Home from "./components/home/Home";
+import { Outlet } from 'react-router-dom';
+import Header from './components/partials/Header';
 
-const App: React.FC = () => {
+const App: React.FC = ():React.JSX.Element => {
   
   return (
     <>
-    <Router>
-      <Routes>
-         <Route path="/profile" element={<Profile  />} />
-         <Route path="/" element={<Home />} />
-      </Routes>
-    </Router>
+      <div className="bg-[#F9F9FA] max-h-16">
+        <Header />
+        <main className="flex mx-auto" 
+            style={{ justifyContent: "center" }}>
+              <Outlet />
+        </main>
+      </div>
     </>
   );
 };
