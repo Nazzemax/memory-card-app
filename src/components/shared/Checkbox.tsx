@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { MdDone } from "react-icons/md";
 
-const Checkbox: React.FC = () => {
+const Checkbox: React.FC = (): React.JSX.Element => {
   const [isChecked, setIsChecked] = useState(false);
 
   const toggleCheckbox = () => {
     setIsChecked(!isChecked);
-    console.log(isChecked);
   };
 
   return (
@@ -20,9 +19,11 @@ const Checkbox: React.FC = () => {
           className="hidden"
         />
         <label htmlFor="custom-checkbox" className="cursor-pointer">
-          <div className="w-5 h-5 border bg-blue-500
+          <div
+            className="w-5 h-5 border bg-blue-500
             border-gray-400 rounded-md flex items-center
-             justify-center">
+             justify-center"
+          >
             {isChecked && <MdDone className="text-white" />}
           </div>
         </label>
