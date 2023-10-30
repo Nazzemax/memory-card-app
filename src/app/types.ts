@@ -16,7 +16,34 @@ export interface User  {
     isAuthenticated:boolean;
 }
 
+export interface UserRegister {
+    email:string;
+    password:string;
+    isSuccess:boolean;
+    isLoading:boolean;
+    error?:string;
+}
 
+export interface FormData {
+    email?: string;
+    password?: string;
+    secondPassword?: string;
+    rememberMe?: boolean;
+    confirmPassword?: boolean;
+  }
+
+ export interface LoginState {
+    password: string;
+    email: string;
+    rememberMe: boolean;
+    error?: string;
+}
+
+export interface RegisterState {
+    email:string;
+    password:string;
+    error?:string;
+}
 
 
 
