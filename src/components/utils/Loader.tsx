@@ -1,5 +1,5 @@
 
-const loader = () => {
+const loader:React.FC = ():React.JSX.Element => {
   return (
 <div className="flex items-center justify-center h-screen">
   <div className="inline-block m-12 h-12 w-12 animate-spin rounded-full 

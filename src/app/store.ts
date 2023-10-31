@@ -1,12 +1,14 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import AuthSlice from '../features/auth/AuthSlice'
+import AuthSlice from '../features/auth/LoginSlice'
+import RegisterSlice from '../features/auth/RegisterSlice'
 
 const reducers = combineReducers({
-    auth:AuthSlice,
+    auth: AuthSlice,
+    register: RegisterSlice,
 })
 
 const store = configureStore({
-   reducer:reducers,
+    reducer: reducers,
 })
 
 export type RootState = ReturnType<typeof store.getState>
