@@ -45,6 +45,17 @@ export interface RegisterState {
     error?: string;
 }
 
+export interface ProfileState {
+    user:User | null;
+    isLoading:boolean;
+    error:string | null;
+}
+
+export interface ProfileFormData {
+    name?:string;
+    avatar?:string;
+}
+
 
 
 
