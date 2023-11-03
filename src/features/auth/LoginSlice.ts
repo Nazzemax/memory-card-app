@@ -1,8 +1,9 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "../../app/store";
-import { User } from "../../app/types";
+import type { User } from "../../app/types";
 import { login, logout } from "./AuthActions";
 import { toast } from "react-toastify";
+import { updateProfile } from "../profile/ProfileActions";
 
 const initialState: User = {
   user: {
@@ -35,6 +36,10 @@ const loginSlice = createSlice({
     },
     logoutUser: (state) => {
       state.user = null
+    },
+    updateUser:(state, action:PayloadAction<User | null>) => {
+      state.user = action.payload;
+      state.isAuthenticated = true;
     }
   },
   extraReducers: builder => {
@@ -67,6 +72,10 @@ const loginSlice = createSlice({
         state.isLoading = false
         state.user.error = action.error.message
       })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.user.name = action.payload.name;
+        state.user.avatar = action.payload.avatar;
+      });
   }
 
 })

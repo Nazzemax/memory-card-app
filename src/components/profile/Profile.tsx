@@ -1,33 +1,179 @@
-import { Navigate } from "react-router-dom"
-import { useAppSelector } from "../../app/hooks/hooks"
-import { RootState } from "../../app/store"
-import { selectUser } from "../../features/auth/AuthSlice"
-import Loader from "../utils/loader"
+import { useAppSelector } from "../../app/hooks/hooks";
+import { RootState } from "../../app/store";
+import { logout } from "../../features/auth/AuthActions";
+import { selectUser } from "../../features/auth/LoginSlice";
+import Loader from "../utils/Loader";
+import leftArrow from "../../assets/leftArrow.svg";
+import photoLabel from "../../assets/photoLabel.svg";
+import editLabel from "../../assets/edit.svg";
+import logoutLabel from "../../assets/logoutLabel.svg";
+import { useActions } from "../../app/hooks/useActions";
+import React from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { ProfileFormData } from "../../app/types";
 
-const Profile:React.FC  = ()=> {
+const Profile: React.FC = (): React.JSX.Element => {
+  const { 
+    register,
+    handleSubmit,
+    formState:{isSubmitting, errors}
+   } = useForm<ProfileFormData>()
+  const user = useAppSelector(selectUser);
+  const isLoading = useAppSelector((state: RootState) => state.auth.isLoading);
+  const { logoutUser } = useActions();
 
- const isAuthenticated = useAppSelector((state:RootState) => state.auth.isAuthenticated)
- 
- const user = useAppSelector(selectUser)
+  const [isEditing, setIsEditing] = React.useState<boolean>(false);
+  const [avatar, setAvatar] = React.useState<string>(user.avatar ? user?.avatar : '');
+  const [name,setName] = React.useState<string>(user.name)
+  const [error, setError] = React.useState<string | null>(null);
 
- const isLoading = useAppSelector(state => state.auth.isLoading)
+  const { updateProfile } = useActions()
 
-  return (
-    <>{!isAuthenticated ? <Navigate to='/' /> : isLoading ? <Loader /> : (
-        <div>
-              <div>User</div>
-        <div>
-           <ul>
-               <li>{user.name}</li>
-               <li>{user.email}</li>
-           </ul>
-        </div>
-        </div>
-    )
-    }
-       
-    </>
-    )
+  const onSubmit:SubmitHandler<ProfileFormData> = async () => {
+     updateProfile({name,avatar})
+  }
+
+  const handleFileChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (file && file.type.startsWith('image/')) 
+    { 
+      if(file.size > 400 * 1024) {
+        setError('File size should be less than 400KB')
+        return
+      }
+      setError('')
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatar(reader.result as string);
+      };
+
+      reader.onerror = (error) => {
+        setError(`Error reading file: ${error}`);
+      };
+
+      reader.readAsDataURL(file);
+  }
+  
 }
 
-export default Profile
+  const handleLogout = () => {
+    logoutUser();
+    logout();
+  };
+
+  return (
+    <>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div className="max-w-full px-[8rem] align-left grow">
+          <div className="flex items-center mt-6">
+            <img src={leftArrow} alt="" />
+            <span className="align-left pl-2 text-sm leading-6">
+              Back to Packs List
+            </span>
+          </div>
+          <div className="flex justify-center">
+            <form
+             onSubmit={handleSubmit(onSubmit)}
+              className="w-[25rem] h-[22rem] 
+            mt-4 bg-white drop-shadow-form-shadow"
+            >
+              <div
+                className="text-3xl pb-6 font-semibold
+                    text-center pt-6"
+              >
+                Personal information
+              </div>
+              <div className="relative mx-auto h-24 w-24">
+                <img
+                  className="mx-auto rounded-full"
+                  src={avatar ? avatar : "https://placehold.co/96x96"}
+                  alt="profile picture"
+                />
+                <label className="cursor-pointer" htmlFor="image">
+                  <input
+                    type="file"
+                    {...register('avatar', {required:'Avatar is required'})}
+                    accept="image/"
+                    id="image"
+                    className="hidden"
+                    onChange={handleFileChange}
+                  />
+                  <img
+                    className="absolute -right-0.5 bottom-0.5"
+                    src={photoLabel}
+                    alt=""
+                  />
+                </label>  
+                {errors.avatar && <p>{errors.avatar.message}</p>}
+              </div>
+              {isEditing ? (
+                <span className="flex items-center flex-col">
+                  <label
+                    className="pl-10 self-start text-sm opacity-50"
+                    htmlFor="name"
+                  >
+                    Nickname
+                  </label>
+                  <div className="wrapper relative">
+                    <input
+                      id="name"
+                      type="text"
+                      value={name}
+                      {...register('name',{required:'Name is required',minLength:3,maxLength:50})}
+                      onChange={ (e) => { setName(e.target.value)} }
+                      className="w-80 h-8 border-opacity-20 focused:opacity-100 font-medium border-b outline-none border-black"
+                      style={{ borderBottomWidth: "0.09888rem" }}
+                    />
+                    <input
+                      type="submit"
+                      value="SAVE"
+                      disabled={isSubmitting}
+                      className="bg-accent-blue hover:bg-blue-700 text-sm
+                                text-center text-white shadow-btn-shadow
+                                rounded cursor-pointer absolute opacity-100 right-3 bottom-1 w-[3.25rem;] h-6"
+                    />
+                  </div>
+                  {errors.name && <p className="pl-10 pt-2 self-start text-red-700 text-sm">{errors?.name.message}</p>}
+                </span>
+              ) : (
+                <div>
+                  <div className="flex justify-center gap-x-2 items-center pt-3">
+                    <div className="text-center leading-6 text-xl font-medium">
+                      {user?.name}
+                    </div>
+                    <button
+                      onClick={() => setIsEditing(true)}
+                      className="w-4 h-4"
+                    >
+                      <img src={editLabel} alt="" />
+                    </button>
+                  </div>
+                  {error && <p className="text-center text-red-700 text-sm">{error}</p>}
+                </div>
+              )}
+
+              <div className="pt-4 text-center opacity-50 text-sm">
+                {user?.email || ''}
+              </div>
+
+              <button
+                onClick={handleLogout}
+                className="mx-auto bg-[#FCFCFC;] shadow-logout-shadow 
+                           rounded-3xl mt-7 flex items-center justify-center w-32 h-9
+                           hover:bg-gray-200 transition duration-1000"
+              >
+                <img className="pr-1 w-4 h-4" src={logoutLabel} alt="" />
+                <span className="text-center">Log out</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default Profile;
