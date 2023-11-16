@@ -1,6 +1,5 @@
-import { useAppSelector } from "../../app/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks/hooks";
 import { RootState } from "../../app/store";
-import { logout } from "../../features/auth/AuthActions";
 import { selectUser } from "../../features/auth/LoginSlice";
 import Loader from "../utils/Loader";
 import leftArrow from "../../assets/leftArrow.svg";
@@ -11,6 +10,8 @@ import { useActions } from "../../app/hooks/useActions";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { ProfileFormData } from "../../app/types";
+import { Link } from "react-router-dom";
+import  { actions }  from "../../features/auth/LoginSlice";
 
 const Profile: React.FC = (): React.JSX.Element => {
   const { 
@@ -20,14 +21,15 @@ const Profile: React.FC = (): React.JSX.Element => {
    } = useForm<ProfileFormData>()
   const user = useAppSelector(selectUser);
   const isLoading = useAppSelector((state: RootState) => state.auth.isLoading);
-  const { logoutUser } = useActions();
+ 
+  const dispatch = useAppDispatch()
 
   const [isEditing, setIsEditing] = React.useState<boolean>(false);
   const [avatar, setAvatar] = React.useState<string>(user.avatar ? user?.avatar : '');
   const [name,setName] = React.useState<string>(user.name)
   const [error, setError] = React.useState<string | null>(null);
 
-  const { updateProfile } = useActions()
+  const { updateProfile, logout } = useActions()
 
   const onSubmit:SubmitHandler<ProfileFormData> = async () => {
      updateProfile({name,avatar})
@@ -51,30 +53,31 @@ const Profile: React.FC = (): React.JSX.Element => {
       reader.onerror = (error) => {
         setError(`Error reading file: ${error}`);
       };
-
       reader.readAsDataURL(file);
   }
   
 }
 
-  const handleLogout = () => {
-    logoutUser();
-    logout();
+  const handleLogout = () => { 
+       dispatch(actions.logoutUser(''))
+       logout()
   };
 
   return (
     <>
       {isLoading ? (
-        <Loader />
+        <Loader h="h-screen" />
       ) : (
         <div className="max-w-full px-[8rem] align-left grow">
           <div className="flex items-center mt-6">
             <img src={leftArrow} alt="" />
+            <Link to="/cards">
             <span className="align-left pl-2 text-sm leading-6">
               Back to Packs List
             </span>
+            </Link>
           </div>
-          <div className="flex justify-center">
+          <div className="flex flex-col items-center">
             <form
              onSubmit={handleSubmit(onSubmit)}
               className="w-[25rem] h-[22rem] 
@@ -110,7 +113,7 @@ const Profile: React.FC = (): React.JSX.Element => {
                 {errors.avatar && <p>{errors.avatar.message}</p>}
               </div>
               {isEditing ? (
-                <span className="flex items-center flex-col">
+                <span className="flex items-center">
                   <label
                     className="pl-10 self-start text-sm opacity-50"
                     htmlFor="name"
@@ -158,17 +161,18 @@ const Profile: React.FC = (): React.JSX.Element => {
               <div className="pt-4 text-center opacity-50 text-sm">
                 {user?.email || ''}
               </div>
-
-              <button
+            </form>
+            <div className="flex flex-center z-10 -mt-20">
+            <button
                 onClick={handleLogout}
                 className="mx-auto bg-[#FCFCFC;] shadow-logout-shadow 
-                           rounded-3xl mt-7 flex items-center justify-center w-32 h-9
+                           rounded-3xl flex items-center justify-center w-32 h-9
                            hover:bg-gray-200 transition duration-1000"
               >
                 <img className="pr-1 w-4 h-4" src={logoutLabel} alt="" />
                 <span className="text-center">Log out</span>
               </button>
-            </form>
+            </div>
           </div>
         </div>
       )}
