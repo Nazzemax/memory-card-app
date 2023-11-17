@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
@@ -15,6 +15,7 @@ import ProtectedRoute from "./routes/ProtectedRoute.tsx";
 import Profile from "./components/profile/Profile.tsx";
 import Home from "./components/home/Home.tsx";
 import "react-toastify/dist/ReactToastify.css";
+import Cards from "./components/cards/Cards.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -23,6 +24,7 @@ const router = createBrowserRouter(
       <Route path="/register" element={<Form formType="register" />} />
       <Route path="" element={<ProtectedRoute />}>
         <Route path="/login" element={<Form formType="login" />} />
+        <Route path="/cards" element={<Cards />} />
         <Route path="/profile" element={<Profile />} />
       </Route>
     </Route>
