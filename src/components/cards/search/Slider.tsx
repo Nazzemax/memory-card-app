@@ -1,6 +1,6 @@
 import ReactSlider from "react-slider";
 import "./Slider.scss";
-import { debounce } from "../../utils/Debounce";
+import { debounce } from 'lodash'
 
 const Slider: React.FC<{
   min: number;
