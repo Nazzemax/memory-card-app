@@ -6,10 +6,9 @@ import Slider from "./search/Slider";
 import Table from "../shared/table/Table";
 import filterSvg from "../../assets/filter.svg";
 import { Link } from "react-router-dom";
+import { debounce } from "lodash";
 
 const Cards = () => {
-  const [searchText, setSearchText] = useState("");
-  const [toggleState, setToggleState] = useState("My");
 
   const {
     cardPacks,
@@ -20,6 +19,7 @@ const Cards = () => {
     page,
     pageCount,
     cardPacksTotalCount,
+    packName,
   } = useAppSelector((state) => state.cards);
 
   const [sliderValues, setSliderValues] = useState([
@@ -27,21 +27,39 @@ const Cards = () => {
     maxCardsCount,
   ]);
 
-  const { getCards, setPage, setItemsPerPage, setMaxCards, setMinCards } =
+  const { getCards, setPage, setItemsPerPage, setMaxCards, setMinCards, setPackName } =
     useActions();
 
   useEffect(() => {
     getCards({
+      packName:packName,
       min: minCardsCount,
       max: maxCardsCount,
       page: page,
       pageCount: pageCount,
     });
-  }, [minCardsCount, maxCardsCount, page, pageCount, getCards]);
+  }, [minCardsCount, maxCardsCount, page, pageCount, getCards, packName]);
 
-  const handleSearchChange = (e) => {
-    setSearchText(e.target.value);
-  };
+ 
+  const [searchText, setSearchText] = useState<string>("");
+  const [toggleState, setToggleState] = useState<string>("My");
+
+
+  // Set up the debounced function inside useEffect
+  useEffect(() => {
+    const debouncedSearch = debounce((query:string) => {
+      setPackName(query)
+    }, 500);
+
+    if (searchText) {
+      debouncedSearch(searchText);
+    }
+
+    // Cleanup function
+    return () => {
+      debouncedSearch.cancel;
+    };
+  }, [searchText, setPackName]); // Dependency array
 
   const handleToggleChange = () => {
     setToggleState(toggleState === "My" ? "All" : "My");
@@ -55,8 +73,7 @@ const Cards = () => {
 
   return (
     <>
-      <div className="w-screen ml-[8.5rem] mr-[8.5rem] mt-10 ">
-        <div className="flex max-w-full justify-between mb-10">
+        <div className="flex ml-[8rem] mr-[8rem] mt-10 justify-between mb-10">
           <h2 className="font-semibold text-xl">Packs list</h2>
           <Link to=''>
             <button className="bg-accent-blue hover:bg-blue-700 text-base
@@ -66,11 +83,11 @@ const Cards = () => {
             </button>
           </Link>
         </div>
-        <div className="mb-9">
+        <div className="mb-9 ml-[8rem] mr-[8rem]">
           <div className="flex items-start md:flex-wrap sm:flex-wrap lg:flex-wrap xl:flex-wrap">
             <SearchInput
               searchText={searchText}
-              onChange={handleSearchChange}
+              debouncedSearch={(e) => setSearchText(e.target.value)}
             />
 
             <div className="flex flex-col mr-12 shrink-0">
@@ -119,7 +136,6 @@ const Cards = () => {
             />
           </div>
         </div>
-      </div>
     </>
   );
 };
