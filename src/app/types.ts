@@ -74,6 +74,7 @@ export interface Cards {
     pageCount: number;
     isLoading:boolean;
     error?:string;
+    packName?:string;
 }
 
 export interface CardsParams {
