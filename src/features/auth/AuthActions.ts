@@ -2,7 +2,6 @@ import { Dispatch, createAsyncThunk } from "@reduxjs/toolkit";
 import { apiService as axios } from "../../services/apiService";
 import type { RegisterState, LoginState } from "../../app/types";
 import { actions } from '../../features/auth/LoginSlice';
-import { redirect } from "react-router-dom";
 
 export const loginUser = async (
     email: string,
@@ -62,6 +61,7 @@ export const logoutUser = async () => {
     try {
         const request = await axios.delete('/auth/me')
         const response = request.data;
+        console.log(response)
         return response
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
@@ -77,7 +77,6 @@ export const logout = createAsyncThunk(
     async (_, thunkApi) => {
         try {
             const response = await logoutUser()
-            console.log(response)
             return response
         } catch (e) {
             return thunkApi.rejectWithValue(e)
@@ -100,18 +99,16 @@ export const register = createAsyncThunk(
 
 export const checkCookies = async (dispatch: Dispatch) => {
     try {
-        const response = await axios.post('/auth/me', {})
+        const response = await axios.post('/auth/me', {});
 
         if (response.status === 200) {
-            dispatch(actions.setUser(response.data))
-            return redirect('/profile')
+            dispatch(actions.setUser(response.data));
         }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
         if (e.response) {
             console.log(e.response.data.error)
+            return
         }
-        return redirect('/login')
     }
-}
-
+};

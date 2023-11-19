@@ -14,11 +14,12 @@ const initialState:Cards = {
     }],
     cardPacksTotalCount: 0, // количество колод
     maxCardsCount: 10,
-    minCardsCount: 0,
+    minCardsCount: 2,
     page: 1,
-    pageCount: 4,
+    pageCount: 10,
     isLoading:false,
-    error:''
+    error:'',
+    packName:'',
 }
 
 const cardSlice = createSlice({
@@ -36,6 +37,9 @@ const cardSlice = createSlice({
         },
         setItemsPerPage:(state, action) => {
             state.pageCount = action.payload
+        },
+        setPackName:(state, action) => {
+            state.packName = action.payload
         }
     },
     extraReducers:builder => {

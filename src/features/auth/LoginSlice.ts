@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, Slice, createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "../../app/store";
 import type { User } from "../../app/types";
 import { login, logout } from "./AuthActions";
@@ -23,11 +23,11 @@ const initialState: User = {
   isAuthenticated: false,
 }
 
-const loginSlice = createSlice({
+const loginSlice:Slice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<User | null>) => {
+    setUser: (state, action: PayloadAction<User['user']>) => {
       state.user = action.payload;
       state.isAuthenticated = true;
     },
@@ -35,9 +35,10 @@ const loginSlice = createSlice({
       state.user.error = action.payload;
     },
     logoutUser: (state) => {
-      state.user = null
+      state.user = initialState.user
+      state.isAuthenticated = false
     },
-    updateUser:(state, action:PayloadAction<User | null>) => {
+    updateUser:(state, action:PayloadAction<User['user']>) => {
       state.user = action.payload;
       state.isAuthenticated = true;
     }
@@ -65,7 +66,7 @@ const loginSlice = createSlice({
         })
       .addCase(logout.fulfilled, state => {
         state.isAuthenticated = false;
-        state.user = null
+        state.user = initialState.user
       })
       .addCase(logout.rejected, (state, action) => {
         state.isAuthenticated = true
