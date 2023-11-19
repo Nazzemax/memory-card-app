@@ -1,14 +1,15 @@
 const EmailInput: React.FC<{
   register: any;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
-}> = ({ register, setEmail }) => {
+  val:string;
+}> = ({ register, setEmail, val }) => {
   return (
     <>
-      {" "}
       <label htmlFor="email" className="text-sm opacity-50 pl-10">
         Email
       </label>
       <input
+        value={val}
         type="email"
         id="email"
         className="w-80 h-8 border-opacity-20 ml-10 

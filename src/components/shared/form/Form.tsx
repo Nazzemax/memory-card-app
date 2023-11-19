@@ -31,8 +31,8 @@ const Form: React.FC<{ formType: "login" | "register" }> = ({ formType }) => {
     useAuthSelectors();
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("rus@gmail.com");
+  const [password, setPassword] = useState<string>("Keiin2022!@#");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [secondPassword, setSecondPassword] = useState<string>("");
 
@@ -68,7 +68,7 @@ const Form: React.FC<{ formType: "login" | "register" }> = ({ formType }) => {
       comparePasswords();
     }
     if (formType === "register" && registerSuccess) {
-      navigate("/login");
+      navigate("/home");
     } else if (formType === "login" && isAuthenticated) {
       navigate("/profile");
     }
@@ -85,7 +85,7 @@ const Form: React.FC<{ formType: "login" | "register" }> = ({ formType }) => {
   return (
     <>
       {isLoading || regLoading ? (
-        <Loader />
+        <Loader h="h-screen" />
       ) : (
         <form
           onSubmit={onSubmit}
@@ -93,9 +93,10 @@ const Form: React.FC<{ formType: "login" | "register" }> = ({ formType }) => {
                  mt-14 bg-white drop-shadow-form-shadow"
         >
           <FormHeader formType={formType} />
-          <EmailInput register={register} setEmail={setEmail} />
+          <EmailInput val={email} register={register} setEmail={setEmail} />
 
           <PasswordInput
+            val={password}
             formType={formType}
             control={control}
             showPassword={showPassword}
