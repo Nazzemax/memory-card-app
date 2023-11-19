@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAppSelector } from "../../app/hooks/hooks";
 import { useActions } from "../../app/hooks/useActions";
 import SearchInput from "./search/SearchInput";
@@ -44,22 +44,27 @@ const Cards = () => {
   const [searchText, setSearchText] = useState<string>("");
   const [toggleState, setToggleState] = useState<string>("My");
 
+  const debouncedSearch = useCallback(
+    debounce((query) => {
+      setPackName(query);
+    }, 500),
+    [setPackName]
+  )
 
-  // Set up the debounced function inside useEffect
   useEffect(() => {
-    const debouncedSearch = debounce((query:string) => {
-      setPackName(query)
-    }, 500);
-
     if (searchText) {
       debouncedSearch(searchText);
+    } else {
+      debouncedSearch('')
     }
 
     // Cleanup function
     return () => {
-      debouncedSearch.cancel;
+      debouncedSearch.cancel(); 
     };
-  }, [searchText, setPackName]); // Dependency array
+  }, [searchText, debouncedSearch]);
+
+
 
   const handleToggleChange = () => {
     setToggleState(toggleState === "My" ? "All" : "My");
@@ -88,6 +93,7 @@ const Cards = () => {
             <SearchInput
               searchText={searchText}
               debouncedSearch={(e) => setSearchText(e.target.value)}
+              isLoading={isLoading}
             />
 
             <div className="flex flex-col mr-12 shrink-0">
@@ -96,6 +102,7 @@ const Cards = () => {
               </label>
               <div className="buttons">
                 <button
+                  disabled={isLoading}
                   onClick={handleToggleChange}
                   className={`p-2 ${
                     toggleState === "My" ? "bg-blue-500" : "bg-gray-200"
@@ -104,6 +111,7 @@ const Cards = () => {
                   My
                 </button>
                 <button
+                  disabled={isLoading}
                   onClick={handleToggleChange}
                   className={`p-2 ${
                     toggleState === "All" ? "bg-blue-500" : "bg-gray-200"
@@ -118,10 +126,11 @@ const Cards = () => {
               min={sliderValues[0]}
               max={sliderValues[1]}
               onSliderChange={handleSliderChange}
+              isLoading={isLoading}
             />
 
             <button className="border-2 border-gray-200 p-2 mt-[1.7rem] ml-9 shrink-0">
-              <img src={filterSvg} alt="Reset/Apply" />
+              <img src={filterSvg} alt="Reset all" />
             </button>
 
             <Table
