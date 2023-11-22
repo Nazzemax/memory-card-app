@@ -1,13 +1,13 @@
 import ReactSlider from "react-slider";
 import "./Slider.scss";
-import { debounce } from 'lodash'
+import { debounce } from "lodash";
 
 const Slider: React.FC<{
   min: number;
   max: number;
-  onSliderChange:(num:number[]) => void
-}> = ({ min, max, onSliderChange }) => {
-  
+  onSliderChange: (num: number[]) => void;
+  isLoading: boolean;
+}> = ({ min, max, onSliderChange, isLoading }) => {
   const debouncedHandleSliderChange = debounce(onSliderChange, 400); // Adjust the delay as needed
 
   return (
@@ -22,8 +22,9 @@ const Slider: React.FC<{
 
           <ReactSlider
             minDistance={1}
+            disabled={isLoading}
             className="slider"
-            value={[min,max]}
+            value={[min, max]}
             onChange={debouncedHandleSliderChange}
             ariaLabel={["Lower thumb", "Upper thumb"]}
             ariaValuetext={(state) => `Thumb value ${state.valueNow}`}

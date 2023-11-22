@@ -8,7 +8,8 @@ const Pagination: React.FC<{
   itemsPerPage: number;
   setPage: (page: number) => Action;
   setItemsPerPage: (pages: number) => Action;
-}> = ({ total, itemsPerPage, setPage, page, setItemsPerPage }) => {
+  isLoading:boolean
+}> = ({ total, itemsPerPage, setPage, page, setItemsPerPage, isLoading }) => {
   const [currentPage, setCurrentPage] = useState(page);
   const totalPages = Math.ceil(total / itemsPerPage);
   const dispatch = useAppDispatch();
@@ -40,7 +41,7 @@ const Pagination: React.FC<{
     // Push the start page or ellipsis if needed
     if (startPage > 1) {
       pages.push(
-        <button key="1" onClick={() => goToPage(1)}>
+        <button disabled={isLoading} key="1" onClick={() => goToPage(1)}>
           1
         </button>
       );
@@ -53,6 +54,7 @@ const Pagination: React.FC<{
     for (let i = startPage; i <= endPage; i++) {
       pages.push(
         <button
+         disabled={isLoading}
           key={i}
           className={`px-3 py-1 ${
             currentPage === i ? "bg-blue-500 text-white" : "text-blue-500"
@@ -70,7 +72,7 @@ const Pagination: React.FC<{
         pages.push(<span key="ellipsis2">...</span>);
       }
       pages.push(
-        <button key={totalPages} onClick={() => goToPage(totalPages)}>
+        <button disabled={isLoading} key={totalPages} onClick={() => goToPage(totalPages)}>
           {totalPages}
         </button>
       );
@@ -80,7 +82,7 @@ const Pagination: React.FC<{
   };
 
   const handleItemsPerPageChange = (event: React.ChangeEvent<HTMLElement>) => {
-    dispatch(setItemsPerPage(parseInt(event.target.value, 10)));
+    dispatch(setItemsPerPage(parseInt((event.target as HTMLInputElement).value, 10)));
   };
 
   return (
@@ -90,7 +92,7 @@ const Pagination: React.FC<{
           currentPage === 1 ? "text-gray-500" : "text-blue-500"
         }`}
         onClick={() => goToPage(currentPage - 1)}
-        disabled={currentPage === 1}
+        disabled={currentPage === 1 || isLoading}
       >
         <div className="cursor-pointer text-black">&lt;</div>
       </button>
@@ -102,7 +104,7 @@ const Pagination: React.FC<{
           currentPage === totalPages ? "text-gray-500" : "text-blue-500"
         }`}
         onClick={() => goToPage(currentPage + 1)}
-        disabled={currentPage === totalPages}
+        disabled={currentPage === totalPages || isLoading}
       >
         <div className="cursor-pointer text-black">&gt;</div>
       </button>
@@ -111,6 +113,7 @@ const Pagination: React.FC<{
 
       <div className="relative">
         <select
+          disabled={isLoading}
           value={itemsPerPage}
           onChange={handleItemsPerPageChange}
           className="block appearance-none w-full bg-white px-2 py-1 pr-7 rounded leading-tight focus:outline-none focus:shadow-outline"
