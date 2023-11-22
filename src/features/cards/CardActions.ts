@@ -11,8 +11,9 @@ export const getCards = createAsyncThunk(
             return cards.data
         } catch(e) {
             if (AxiosError<typeof e>) {
+                const axiosError = e as AxiosError
                 return thunkApi.rejectWithValue({
-                  message: e.message,
+                  message: axiosError.message,
                 });
               }
               return thunkApi.rejectWithValue({
