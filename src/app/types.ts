@@ -75,13 +75,14 @@ export interface Cards {
     isLoading:boolean;
     error?:string;
     packName?:string;
+    isSorted?:string;
 }
 
 export interface CardsParams {
      packName?:string; // не обязательно
      min?:number; // не обязательно
      max?:number; // не обязательно
-     sortPacks?:number; // не обязательно (0 или 1, название свойства)
+     sortPacks?:string; // не обязательно (0 или 1, название свойства)
      page?:number;
      pageCount?:number; // не обязательно
      user_id?:string; // чьи колоды // не обязательно, или прийдут все
