@@ -22,10 +22,17 @@ const Cards = () => {
     isSorted,
   } = useAppSelector((state) => state.cards);
 
-  const [sliderValues, setSliderValues] = useState([
+  const { user } = useAppSelector((state) => state.auth);
+
+  const [id, setId] = useState<string>("");
+
+  const [sliderValues, setSliderValues] = useState<number[]>([
     minCardsCount,
     maxCardsCount,
   ]);
+
+  const [searchText, setSearchText] = useState<string>("");
+  const [toggleState, setToggleState] = useState<string>("All");
 
   const {
     getCards,
@@ -39,6 +46,7 @@ const Cards = () => {
 
   useEffect(() => {
     getCards({
+      user_id: id,
       packName: packName,
       min: minCardsCount,
       max: maxCardsCount,
@@ -47,6 +55,7 @@ const Cards = () => {
       sortPacks: isSorted,
     });
   }, [
+    id,
     minCardsCount,
     maxCardsCount,
     page,
@@ -55,9 +64,6 @@ const Cards = () => {
     packName,
     isSorted,
   ]);
-
-  const [searchText, setSearchText] = useState<string>("");
-  const [toggleState, setToggleState] = useState<string>("All");
 
   const debouncedSearch = useCallback(
     debounce((query) => {
@@ -78,10 +84,6 @@ const Cards = () => {
       debouncedSearch.cancel();
     };
   }, [searchText, debouncedSearch]);
-
-  const handleToggleChange = () => {
-    setToggleState(toggleState === "My" ? "All" : "My");
-  };
 
   const handleSliderChange = (values: number[]) => {
     setMinCards(values[0]);
@@ -127,7 +129,10 @@ const Cards = () => {
             <div className="buttons">
               <button
                 disabled={isLoading}
-                onClick={handleToggleChange}
+                onClick={() => {
+                  setId(user._id);
+                  setToggleState("My");
+                }}
                 className={`p-2 ${
                   toggleState === "My" ? "bg-blue-500" : "bg-gray-200"
                 } w-24`}
@@ -136,7 +141,10 @@ const Cards = () => {
               </button>
               <button
                 disabled={isLoading}
-                onClick={handleToggleChange}
+                onClick={() => {
+                  setId("");
+                  setToggleState("All");
+                }}
                 className={`p-2 ${
                   toggleState === "All" ? "bg-blue-500" : "bg-gray-200"
                 } w-24`}
