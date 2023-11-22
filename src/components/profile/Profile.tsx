@@ -69,13 +69,14 @@ const Profile: React.FC = (): React.JSX.Element => {
         <Loader h="h-screen" />
       ) : (
         <div className="max-w-full px-[8rem] align-left grow">
-          <div className="flex items-center mt-6">
+          <div className="">
+          <Link className="flex items-center mt-6 w-40" to="/cards">
             <img src={leftArrow} alt="" />
-            <Link to="/cards">
+            
             <span className="align-left pl-2 text-sm leading-6">
               Back to Packs List
             </span>
-            </Link>
+          </Link>
           </div>
           <div className="flex flex-col items-center">
             <form
