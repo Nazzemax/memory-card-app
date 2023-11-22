@@ -20,6 +20,7 @@ const initialState:Cards = {
     isLoading:false,
     error:'',
     packName:'',
+    isSorted:''
 }
 
 const cardSlice = createSlice({
@@ -40,6 +41,9 @@ const cardSlice = createSlice({
         },
         setPackName:(state, action) => {
             state.packName = action.payload
+        },
+        setSorting:(state, action) => {
+            state.isSorted = action.payload
         }
     },
     extraReducers:builder => {
