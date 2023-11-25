@@ -7,7 +7,7 @@ const App: React.FC = ():React.JSX.Element => {
     <>
       <div className="bg-[#F9F9FA] max-h-16">
         <Header />
-        <main className="flex mx-auto" 
+        <main className="flex flex-col w-screen " 
             style={{ justifyContent: "center" }}>
               <Outlet />
         </main>

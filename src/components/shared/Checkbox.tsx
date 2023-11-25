@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { MdDone } from "react-icons/md";
 
-const Checkbox: React.FC = (): React.JSX.Element => {
+const Checkbox: React.FC<{setRememberMe:React.Dispatch<React.SetStateAction<boolean>>}> = ({setRememberMe}): React.JSX.Element => {
   const [isChecked, setIsChecked] = useState(false);
 
   const toggleCheckbox = () => {
@@ -28,6 +28,12 @@ const Checkbox: React.FC = (): React.JSX.Element => {
           </div>
         </label>
       </div>
+       <span className="pl-4 font-medium cursor-pointer" onClick={() => {
+        setRememberMe(true)
+        toggleCheckbox()
+       }}>
+        Remember me
+      </span>
     </>
   );
 };

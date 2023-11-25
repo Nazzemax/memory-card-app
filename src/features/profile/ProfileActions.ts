@@ -16,7 +16,7 @@ export const updateProfile = createAsyncThunk(
                 },
             });
             return response.data.updatedUser
-        } catch(e) {
+        } catch(e:any) {
             return rejectWithValue(e.response.data)
         }
     } 

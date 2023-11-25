@@ -2,7 +2,7 @@ import Form from "../shared/form/Form";
 
 const Home: React.FC = (): React.JSX.Element => {
   return (
-    <main className="flex mx-auto" style={{ justifyContent: "center" }}>
+    <main className="flex mx-auto px-32" style={{ justifyContent: "center" }}>
       <Form formType="login" />
     </main>
   );

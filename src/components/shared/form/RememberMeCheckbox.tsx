@@ -6,10 +6,7 @@ const RememberMeCheckbox: React.FC<{
 }> = ({ setRememberMe }) => {
   return (
     <div className="flex pb-7 pt-6">
-      <Checkbox />
-      <span className="pl-4 font-medium" onClick={() => setRememberMe(true)}>
-        Remember me
-      </span>
+      <Checkbox setRememberMe={setRememberMe} />
     </div>
   );
 };
