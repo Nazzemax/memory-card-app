@@ -19,7 +19,6 @@ const Form: React.FC<{ formType: "login" | "register" }> = ({ formType }) => {
     handleSubmit,
     clearErrors,
     setError,
-    control,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     defaultValues: {},
@@ -70,7 +69,7 @@ const Form: React.FC<{ formType: "login" | "register" }> = ({ formType }) => {
     if (formType === "register" && registerSuccess) {
       navigate("/home");
     } else if (formType === "login" && isAuthenticated) {
-      navigate("/profile");
+      navigate("/cards");
     }
   }, [
     comparePasswords,
@@ -89,25 +88,29 @@ const Form: React.FC<{ formType: "login" | "register" }> = ({ formType }) => {
       ) : (
         <form
           onSubmit={onSubmit}
-          className="flex flex-col w-[26rem] h-[34.5rem] 
-                 mt-14 bg-white drop-shadow-form-shadow"
+          className={
+            formType === "register"
+              ? "self-center flex flex-col w-[26rem] h-[34.5rem] mt-14 bg-white drop-shadow-form-shadow"
+              : `flex flex-col w-[26rem] h-[34.5rem] 
+                 mt-14 bg-white drop-shadow-form-shadow`
+          }
         >
           <FormHeader formType={formType} />
-          <EmailInput val={email} register={register} setEmail={setEmail} />
+          <EmailInput register={register} val={email} setEmail={setEmail} />
 
           <PasswordInput
+            register={register}
             val={password}
             formType={formType}
-            control={control}
             showPassword={showPassword}
             togglePasswordVisibility={togglePasswordVisibility}
             setPassword={setPassword}
             errors={errors}
-            error={error}
+            error={error as string}
           />
           {formType === "register" && (
             <ConfirmPasswordInput
-              control={control}
+              register={register}
               showPassword={showPassword}
               togglePasswordVisibility={togglePasswordVisibility}
               setSecondPassword={setSecondPassword}

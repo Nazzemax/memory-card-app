@@ -1,5 +1,6 @@
 const PasswordError: React.FC<{
-  errors: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  errors: any
   error?: string;
 }> = ({ errors, error }) => {
   return (

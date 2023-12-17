@@ -12,7 +12,7 @@ const NavigationPrompt: React.FC<{ formType: "login" | "register" }> = ({
           : "Already have an account?"}
       </p>
       <Link
-        to={formType === "login" ? "/register" : "/login"}
+        to={formType === "login" ? "/register" : "/home"}
         className="text-center mb-10 underline text-blue-500"
       >
         {formType === "login" ? "Sign Up" : "Sign in"}

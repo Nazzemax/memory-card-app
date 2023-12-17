@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const Button: React.FC = (): React.JSX.Element => {
   return (
-    <Link to="/login">
+    <Link to="/home">
       <button
         className="bg-accent-blue hover:bg-blue-700 text-base
      text-center text-white shadow-btn-shadow

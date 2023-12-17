@@ -1,6 +1,5 @@
-import { useAppDispatch, useAppSelector } from "../../app/hooks/hooks";
+import { useAppSelector } from "../../app/hooks/hooks";
 import { RootState } from "../../app/store";
-import { selectUser } from "../../features/auth/LoginSlice";
 import Loader from "../utils/Loader";
 import leftArrow from "../../assets/leftArrow.svg";
 import photoLabel from "../../assets/photoLabel.svg";
@@ -11,40 +10,40 @@ import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { ProfileFormData } from "../../app/types";
 import { Link } from "react-router-dom";
-import  { actions }  from "../../features/auth/LoginSlice";
+import { selectUser } from "../../features/auth/LoginSlice";
 
 const Profile: React.FC = (): React.JSX.Element => {
-  const { 
+  const {
     register,
     handleSubmit,
-    formState:{isSubmitting, errors}
-   } = useForm<ProfileFormData>()
+    formState: { isSubmitting, errors },
+  } = useForm<ProfileFormData>();
   const user = useAppSelector(selectUser);
-  const isLoading = useAppSelector((state: RootState) => state.auth.isLoading);
- 
-  const dispatch = useAppDispatch()
+  const isLoading = useAppSelector((state: RootState) => state.auth.user.isLoading);
 
   const [isEditing, setIsEditing] = React.useState<boolean>(false);
-  const [avatar, setAvatar] = React.useState<string>(user.avatar ? user?.avatar : '');
-  const [name,setName] = React.useState<string>(user.name)
+  const [avatar, setAvatar] = React.useState<string>(
+    user?.avatar ? user?.avatar : ""
+  );
+  const [name, setName] = React.useState<string>(user?.name || "");
   const [error, setError] = React.useState<string | null>(null);
 
-  const { updateProfile, logout } = useActions()
+  const { updateProfile, logout } = useActions();
 
-  const onSubmit:SubmitHandler<ProfileFormData> = async () => {
-     updateProfile({name,avatar})
-  }
+  const onSubmit: SubmitHandler<ProfileFormData> = async () => {
+    updateProfile({ name, avatar });
+    setIsEditing(false);
+  };
 
-  const handleFileChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
-    if (file && file.type.startsWith('image/')) 
-    { 
-      if(file.size > 400 * 1024) {
-        setError('File size should be less than 400KB')
-        return
+    if (file && file.type.startsWith("image/")) {
+      if (file.size > 400 * 1024) {
+        setError("File size should be less than 400KB");
+        return;
       }
-      setError('')
+      setError("");
       const reader = new FileReader();
       reader.onloadend = () => {
         setAvatar(reader.result as string);
@@ -54,13 +53,11 @@ const Profile: React.FC = (): React.JSX.Element => {
         setError(`Error reading file: ${error}`);
       };
       reader.readAsDataURL(file);
-  }
-  
-}
+    }
+  };
 
-  const handleLogout = () => { 
-       dispatch(actions.logoutUser(''))
-       logout()
+  const handleLogout = () => {
+    logout();
   };
 
   return (
@@ -70,17 +67,17 @@ const Profile: React.FC = (): React.JSX.Element => {
       ) : (
         <div className="max-w-full px-[8rem] align-left grow">
           <div className="">
-          <Link className="flex items-center mt-6 w-40" to="/cards">
-            <img src={leftArrow} alt="" />
-            
-            <span className="align-left pl-2 text-sm leading-6">
-              Back to Packs List
-            </span>
-          </Link>
+            <Link className="flex items-center mt-6 w-40" to="/cards">
+              <img src={leftArrow} alt="" />
+
+              <span className="align-left pl-2 text-sm leading-6">
+                Back to Packs List
+              </span>
+            </Link>
           </div>
           <div className="flex flex-col items-center">
             <form
-             onSubmit={handleSubmit(onSubmit)}
+              onSubmit={handleSubmit(onSubmit)}
               className="w-[25rem] h-[22rem] 
             mt-4 bg-white drop-shadow-form-shadow"
             >
@@ -99,18 +96,20 @@ const Profile: React.FC = (): React.JSX.Element => {
                 <label className="cursor-pointer" htmlFor="image">
                   <input
                     type="file"
-                    {...register('avatar', {required:'Avatar is required'})}
+                    disabled={!isEditing}
+                    {...register("avatar")}
                     accept="image/"
                     id="image"
                     className="hidden"
                     onChange={handleFileChange}
                   />
+
                   <img
                     className="absolute -right-0.5 bottom-0.5"
                     src={photoLabel}
                     alt=""
                   />
-                </label>  
+                </label>
                 {errors.avatar && <p>{errors.avatar.message}</p>}
               </div>
               {isEditing ? (
@@ -126,8 +125,12 @@ const Profile: React.FC = (): React.JSX.Element => {
                       id="name"
                       type="text"
                       value={name}
-                      {...register('name',{required:'Name is required',minLength:3,maxLength:50})}
-                      onChange={ (e) => { setName(e.target.value)} }
+                      {...register("name", {
+                        required: "Name is required",
+                        minLength: 3,
+                        maxLength: 50,
+                      })}
+                      onChange={(e) => setName(e.target.value)}
                       className="w-80 h-8 border-opacity-20 focused:opacity-100 font-medium border-b outline-none border-black"
                       style={{ borderBottomWidth: "0.09888rem" }}
                     />
@@ -140,7 +143,11 @@ const Profile: React.FC = (): React.JSX.Element => {
                                 rounded cursor-pointer absolute opacity-100 right-3 bottom-1 w-[3.25rem;] h-6"
                     />
                   </div>
-                  {errors.name && <p className="pl-10 pt-2 self-start text-red-700 text-sm">{errors?.name.message}</p>}
+                  {errors.name && (
+                    <p className="pl-10 pt-2 self-start text-red-700 text-sm">
+                      {errors?.name.message}
+                    </p>
+                  )}
                 </span>
               ) : (
                 <div>
@@ -155,16 +162,18 @@ const Profile: React.FC = (): React.JSX.Element => {
                       <img src={editLabel} alt="" />
                     </button>
                   </div>
-                  {error && <p className="text-center text-red-700 text-sm">{error}</p>}
+                  {error && (
+                    <p className="text-center text-red-700 text-sm">{error}</p>
+                  )}
                 </div>
               )}
 
               <div className="pt-4 text-center opacity-50 text-sm">
-                {user?.email || ''}
+                {user?.email || ""}
               </div>
             </form>
             <div className="flex flex-center z-10 -mt-20">
-            <button
+              <button
                 onClick={handleLogout}
                 className="mx-auto bg-[#FCFCFC;] shadow-logout-shadow 
                            rounded-3xl flex items-center justify-center w-32 h-9
