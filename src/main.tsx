@@ -15,7 +15,9 @@ import Profile from "./components/profile/Profile.tsx";
 import Home from "./components/home/Home.tsx";
 import "react-toastify/dist/ReactToastify.css";
 import Cards from "./components/cards/Cards.tsx";
-import React from "react";
+import PagePack from "./components/cards/pack/PagePack.tsx";
+import { persistor } from "./app/store.ts";
+import { PersistGate } from 'redux-persist/integration/react';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -23,7 +25,8 @@ const router = createBrowserRouter(
       <Route path="/home" element={<Home />} />
       <Route path="/register" element={<Form formType="register" />} />
       <Route path="" element={<ProtectedRoute />}>
-        <Route path="/cards" element={<Cards />} />
+        <Route path="/cards/" element={<Cards />} />
+        <Route path="pack/:id" element={<PagePack />} />
         <Route path="/profile" element={<Profile />} />
       </Route>
     </Route>
@@ -32,8 +35,10 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
-    <React.StrictMode>
-      <RouterProvider router={router} />
-    </React.StrictMode>
+    {/* <React.StrictMode> */}
+    <PersistGate loading={null} persistor={persistor}>
+       <RouterProvider router={router} />
+    </PersistGate>
+    {/* </React.StrictMode> */}
   </Provider>
 );
