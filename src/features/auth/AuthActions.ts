@@ -26,13 +26,24 @@ export const loginUser = async (
     }
 }
 
+export const login = createAsyncThunk(
+    'auth/login',
+    async ({ email, password, rememberMe }: LoginState, thunkApi) => {
+        try {
+            const response = await loginUser(email, password, rememberMe);
+            return response
+        } catch (e) {
+            return thunkApi.rejectWithValue(e)
+        }
+    }
+)
+
 export const registerUser = async (email: string, password: string) => {
     try {
         const request = await axios.post('/auth/register', {
             email,
             password,
         })
-
         const response = request.data
 
         return response
@@ -45,23 +56,16 @@ export const registerUser = async (email: string, password: string) => {
 }
 
 
-export const login = createAsyncThunk(
-    'auth/login',
-    async ({ email, password, rememberMe }: LoginState, thunkApi) => {
-        try {
-            const response = await loginUser(email, password, rememberMe);
-            return response as LoginState
-        } catch (e) {
-            return thunkApi.rejectWithValue(e)
-        }
-    }
-)
 
-export const logoutUser = async () => {
+
+export const logoutMe = async (dispatch: Dispatch) => {
     try {
         const request = await axios.delete('/auth/me')
+
+
+        dispatch(actions.logoutUser(''));
         const response = request.data;
-        console.log(response)
+
         return response
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
@@ -76,7 +80,9 @@ export const logout = createAsyncThunk(
     'auth/logout',
     async (_, thunkApi) => {
         try {
-            const response = await logoutUser()
+            const dispatch = thunkApi.dispatch as Dispatch
+            const response = await logoutMe(dispatch)
+
             return response
         } catch (e) {
             return thunkApi.rejectWithValue(e)
@@ -104,7 +110,7 @@ export const checkCookies = async (dispatch: Dispatch) => {
         if (response.status === 200) {
             dispatch(actions.setUser(response.data));
         }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
         if (e.response) {
             console.log(e.response.data.error)
