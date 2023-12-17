@@ -20,51 +20,34 @@ const Cards = () => {
     cardPacksTotalCount,
     packName,
     isSorted,
+    toggleState,
+    id
   } = useAppSelector((state) => state.cards);
 
-  const { user } = useAppSelector((state) => state.auth);
-
-  const [id, setId] = useState<string>("");
+  const { user } = useAppSelector((state) => state.auth.user);
 
   const [sliderValues, setSliderValues] = useState<number[]>([
     minCardsCount,
     maxCardsCount,
   ]);
 
-  const [searchText, setSearchText] = useState<string>("");
-  const [toggleState, setToggleState] = useState<string>("All");
-
   const {
-    getCards,
+    getPackCards,
     setPage,
     setItemsPerPage,
     setMaxCards,
     setMinCards,
     setPackName,
     setSorting,
+    addCardPack,
+    setToggleState,
+    setUserId
   } = useActions();
 
-  useEffect(() => {
-    getCards({
-      user_id: id,
-      packName: packName,
-      min: minCardsCount,
-      max: maxCardsCount,
-      page: page,
-      pageCount: pageCount,
-      sortPacks: isSorted,
-    });
-  }, [
-    id,
-    minCardsCount,
-    maxCardsCount,
-    page,
-    pageCount,
-    getCards,
-    packName,
-    isSorted,
-  ]);
+  const [searchText, setSearchText] = useState<string>("");
 
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSearch = useCallback(
     debounce((query) => {
       setPackName(query);
@@ -85,6 +68,27 @@ const Cards = () => {
     };
   }, [searchText, debouncedSearch]);
 
+  useEffect(() => {
+    getPackCards({
+      user_id: id,
+      packName: packName,
+      min: minCardsCount,
+      max: maxCardsCount,
+      page: page,
+      pageCount: pageCount,
+      sortPacks: isSorted,
+    });
+  }, [
+    id,
+    minCardsCount,
+    maxCardsCount,
+    page,
+    pageCount,
+    getPackCards,
+    packName,
+    isSorted,
+  ]);
+
   const handleSliderChange = (values: number[]) => {
     setMinCards(values[0]);
     setMaxCards(values[1]);
@@ -100,12 +104,45 @@ const Cards = () => {
     setSorting("");
   };
 
+  const handleAddPack = async (id: string) => {
+    try {
+      await addCardPack({ name: 'Bossero' });
+  
+      if (toggleState === 'My') {
+        await getPackCards({
+          user_id: id,
+          min: minCardsCount,
+          max: maxCardsCount,
+          page: page,
+          pageCount: pageCount,
+          sortPacks: isSorted,
+        });
+      } else if (toggleState === 'All') {
+        await getPackCards({
+          min: minCardsCount,
+          max: maxCardsCount,
+          page: page,
+          pageCount: pageCount,
+          sortPacks: isSorted,
+        });
+      }
+  
+      // Continue with any additional logic after fetching pack cards
+    } catch (error) {
+      // Handle errors from adding card pack or fetching pack cards
+      console.error('Error:', error);
+    }
+  };
+  
+  
+
   return (
     <>
       <div className="flex ml-[8rem] mr-[8rem] mt-10 justify-between mb-10">
         <h2 className="font-semibold text-xl">Packs list</h2>
         <Link to="">
           <button
+          onClick={() => handleAddPack(user._id || '')}
             className="bg-accent-blue hover:bg-blue-700 text-base
      text-center text-white shadow-btn-shadow
       rounded-3xl w-40 h-9"
@@ -124,14 +161,14 @@ const Cards = () => {
             isLoading={isLoading}
           />
 
-          <div className="flex flex-col mr-12 shrink-0">
+          <div className="md:ml-6 lg:ml-6 flex flex-col mr-12 shrink-0">
             <label className="text-sm font-medium pb-2">Show packs cards</label>
             <div className="buttons">
               <button
                 disabled={isLoading}
                 onClick={() => {
-                  setId(user._id);
-                  setToggleState("My");
+                 setUserId(user._id)
+                 setToggleState("My");
                 }}
                 className={`p-2 ${
                   toggleState === "My" ? "bg-blue-500" : "bg-gray-200"
@@ -142,7 +179,7 @@ const Cards = () => {
               <button
                 disabled={isLoading}
                 onClick={() => {
-                  setId("");
+                  setUserId('')
                   setToggleState("All");
                 }}
                 className={`p-2 ${
@@ -169,6 +206,7 @@ const Cards = () => {
           </button>
 
           <Table
+            toggleState={toggleState}
             cardPacksTotalCount={cardPacksTotalCount}
             setPage={setPage}
             isSorting={isSorted || ""}
@@ -176,7 +214,7 @@ const Cards = () => {
             setItemsPerPage={setItemsPerPage}
             isLoading={isLoading}
             error={error || ""}
-            cards={cardPacks}
+            cardsPacks={cardPacks}
             page={page}
             pageCount={pageCount}
           />
