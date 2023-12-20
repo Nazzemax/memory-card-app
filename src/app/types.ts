@@ -1,20 +1,29 @@
 export interface User {
-    user: {
-        _id: string;
-        email: string;
-        name: string;
-        avatar?: string;
-        publicCardPacksCount: number;  // количество колод
-        created: string;
-        updated: string;
-        isAdmin: boolean;
-        verified: boolean; // подтвердил ли почту
-        rememberMe: boolean;
-        error?: string;
-    }
-    isLoading: boolean;
-    isAuthenticated: boolean;
+    _id: string;
+    email: string;
+    name: string;
+    avatar?: string;
+    publicCardPacksCount: number;
+    created: string;
+    updated: string;
+    isAdmin: boolean;
+    verified: boolean;
+    rememberMe: boolean;
 }
+
+export interface LoginState {
+    password: string;
+    email: string;
+    rememberMe: boolean;
+    error?: string;
+    user?: {
+        user: User;
+        isLoading: boolean;
+        isAuthenticated: boolean;
+    };
+    isLogout?:boolean;
+}
+
 
 export interface UserRegister {
     email: string;
@@ -32,24 +41,10 @@ export interface FormData {
     confirmPassword?: boolean;
 }
 
-export interface LoginState {
-    password: string;
-    email: string;
-    rememberMe: boolean;
-    error?: string;
-    user?:User | null;
-}
-
 export interface RegisterState {
     email: string;
     password: string;
     error?: string;
-}
-
-export interface ProfileState {
-    user:User | null;
-    isLoading:boolean;
-    error:string | null;
 }
 
 export interface ProfileFormData {
@@ -67,7 +62,25 @@ export interface Cards {
         updated: string;
         user_name:string;
     }],
-    cardPacksTotalCount: number; // количество колод
+    cards:[
+        {
+            answer: string;
+            question: string;
+            cardsPack_id: string;
+            grade: number; // средняя оценка карточек
+            shots: number; // количество попыток
+            user_id: string;
+            created: string;
+            updated: string;
+            _id: string;
+            answerImg?: string; // не обязателен
+            questionImg?: string; // не обязателен
+            questionVideo?: string; // не обязателен
+            answerVideo?: string; // не обязателен
+        }
+    ],
+    cardPacksTotalCount?: number; // количество колод
+    cardsTotalCount?:number;
     maxCardsCount: number;
     minCardsCount: number;
     page: number;
@@ -76,6 +89,14 @@ export interface Cards {
     error?:string;
     packName?:string;
     isSorted?:string;
+    cardQuestion?:string; 
+    maxGrade?:number;
+    minGrade?:number;
+    packUserId?:string;
+    grade?:number;
+    name?:string;
+    toggleState?:'My' | 'All';
+    id?:string;
 }
 
 export interface CardsParams {
@@ -91,18 +112,43 @@ export interface CardsParams {
 export interface CardParams extends CardsParams {
     cardAnswer?:string;
     cardQuestion?:string;
-    cardsPack_id:string;
-    sortCards?:number;
+    cardsPack_id?:string;
+    sortCards?:string;
 }
 
 export interface CardPack {
-    _id: string;
-    user_id: string;
-    name: string;
-    cardsCount: number;
-    created: string;
-    updated: string;
-    user_name: string;
+        _id?: string;
+        user_id?: string;
+        name?: string;
+        cardsCount?: number;
+        created?: string;
+        updated?: string;
+        user_name?: string;
   }
   
  export type CardPacks = CardPack[];
+
+ export interface ICards {
+    answer?: string;
+    question?: string;
+    cardsPack_id?: string;
+    grade?: number; // средняя оценка карточек
+    shots?: number; // количество попыток
+    user_id?: string;
+    created?: string;
+    updated?: string;
+    _id?: string;
+    answerImg?: string; // не обязателен
+    questionImg?: string; // не обязателен
+    questionVideo?: string; // не обязателен
+    answerVideo?: string; // не обязателен
+ }
+
+ export type CardsList = ICards[]
+
+
+ export interface IPostCardPack {
+    name?:string;
+    deckCover?:string;
+    private?:boolean;
+ }

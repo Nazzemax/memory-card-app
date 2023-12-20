@@ -1,6 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import type { Cards } from "../../app/types";
-import { getCards } from "./CardActions";
+import { getPackCards, addCardPack, getCard, deleteCardPack, updateCardPack, addCard, deleteCard, updateCard } from "./CardActions";
 
 const initialState:Cards = {
     cardPacks:[{
@@ -12,7 +12,25 @@ const initialState:Cards = {
         updated: '',
         user_name:'',
     }],
+    cards:[
+        {
+            question:'',
+            answer: '',
+            cardsPack_id: '',
+            grade: 0, // средняя оценка карточек
+            shots: 0, // количество попыток
+            user_id: '',
+            created: '',
+            updated: '',
+            _id: '',
+            answerImg: '', // не обязателен
+            questionImg: '', // не обязателен
+            questionVideo: '', // не обязателен
+            answerVideo:'', // не обязателен
+        }
+    ],
     cardPacksTotalCount: 0, // количество колод
+    cardsTotalCount:0,
     maxCardsCount: 10,
     minCardsCount: 2,
     page: 1,
@@ -20,7 +38,15 @@ const initialState:Cards = {
     isLoading:false,
     error:'',
     packName:'',
-    isSorted:''
+    isSorted:'',
+    cardQuestion:'',
+    minGrade:0,
+    maxGrade:4,
+    packUserId:'',
+    grade:0,
+    name:'',
+    toggleState:'All',
+    id:''
 }
 
 const cardSlice = createSlice({
@@ -44,26 +70,113 @@ const cardSlice = createSlice({
         },
         setSorting:(state, action) => {
             state.isSorted = action.payload
+        },
+        setQuestionName:(state, action) => {
+            state.cardQuestion = action.payload
+        },
+        setRating:(state, action) => {
+            state.grade = action.payload
+        },
+        setToggleState:(state, action:PayloadAction<'My' | 'All'>) => {
+            state.toggleState = action.payload
+        },
+        setUserId:(state, action) => {
+            state.id = action.payload
         }
     },
     extraReducers:builder => {
         builder
-            .addCase(getCards.pending, (state => {
+            .addCase(getPackCards.pending, (state => {
                 state.isLoading = true;
-                state.error = ''
             }))
-            .addCase(getCards.fulfilled, (state, action) => {
+            .addCase(getPackCards.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.error = ''
                 state.cardPacks = action.payload.cardPacks
                 state.cardPacksTotalCount = action.payload.cardPacksTotalCount
             })
-            .addCase(getCards.rejected, (state, action) => {
+            .addCase(getPackCards.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.error.message || 'Error with getting cards'
             })
+            .addCase(getCard.pending, state => {
+                state.isLoading = true;
+            })
+            .addCase(getCard.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.cards = action.payload.cards;
+                state.page = action.payload.page;
+                state.pageCount = action.payload.pageCount;
+                state.minGrade = action.payload.minGrade;
+                state.maxGrade = action.payload.maxGrade;
+                state.cardsTotalCount = action.payload.cardsTotalCount;
+                state.name = action.payload.packName;
+            })
+            .addCase(getCard.rejected, (state, action) => {
+                state.error = action.error.message || 'Error while getting cards'
+                state.isLoading = false
+            })
+            .addCase(addCardPack.pending, state => {
+                state.isLoading = true
+            })
+            .addCase(addCardPack.fulfilled, (state) => {
+                state.isLoading = false
+            })
+            .addCase(addCardPack.rejected, (state,action) => {
+                state.isLoading = false;
+                state.error = action.error.message || 'Error while adding a card pack'
+            })
+            .addCase(deleteCardPack.pending, state => {
+                state.isLoading = true
+            })
+            .addCase(deleteCardPack.fulfilled, state => {
+                state.isLoading = false
+            })
+            .addCase(deleteCardPack.rejected, (state,action) => {
+                state.isLoading = false;
+                state.error = action.error.message || 'Error while removing a card pack'
+            })
+            .addCase(updateCardPack.pending, state => {
+                state.isLoading = true
+            })
+            .addCase(updateCardPack.fulfilled, state => {
+                state.isLoading = false
+            })
+            .addCase(updateCardPack.rejected, (state, action)=> {
+                state.isLoading = false;
+                state.error = action.error.message || 'Error while updating a card pack'
+            })
+            .addCase(addCard.pending, state => {
+                state.isLoading = true;
+            })
+            .addCase(addCard.fulfilled, state => {
+                state.isLoading = false;
+            })
+            .addCase(addCard.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.error.message || 'Error with adding card';
+            })
+            .addCase(deleteCard.pending, state => {
+                state.isLoading = true;
+            })
+            .addCase(deleteCard.fulfilled, state => {
+                state.isLoading = false;
+            })
+            .addCase(deleteCard.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.error.message || 'Error with adding card';
+            })
+            .addCase(updateCard.pending, state => {
+                state.isLoading = true;
+            })
+            .addCase(updateCard.fulfilled, state => {
+                state.isLoading = false;
+            })
+            .addCase(updateCard.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.error.message || 'Error with adding card';
+            })
     }
-
 })
 
 export const {actions, reducer} = cardSlice

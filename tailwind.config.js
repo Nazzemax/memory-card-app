@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import react from '@vitejs/plugin-react';
+
 export default {
   content: [
     "./index.html",
@@ -12,6 +14,7 @@ export default {
       padding:'8rem',
     },
     extend: {
+      stroke:['hover','focus'],
       colors:{
         'accent-blue':'#366EFF',
       },
@@ -25,9 +28,9 @@ export default {
           '-1px -1px 2px rgba(0, 0, 0, 0.10)',
           '1px 1px 2px rgba(0, 0, 0, 0.10)'
         ],
-      }
+      },
     },
   },
-  plugins: [],
+  plugins: [react()],
 }
 

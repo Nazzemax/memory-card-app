@@ -23,7 +23,7 @@ const registerSlice = createSlice({
           state.isSuccess = false;
         })
       .addCase(register
-        .fulfilled, (state, _) => {
+        .fulfilled, (state) => {
           state.isLoading = false;
           state.isSuccess = true;
           toast.success('Successfully registered')
