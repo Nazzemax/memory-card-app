@@ -1,8 +1,11 @@
+import { useForm } from "react-hook-form";
+
 const EmailInput: React.FC<{
-  register: any;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   val:string;
-}> = ({ register, setEmail, val }) => {
+  register:ReturnType<typeof useForm>['register']
+}> = ({ setEmail, val, register }) => {
+
   return (
     <>
       <label htmlFor="email" className="text-sm opacity-50 pl-10">
