@@ -77,8 +77,10 @@ const Header: React.FC = (): React.JSX.Element => {
             >
               <img
                 loading="lazy"
+                width="75"
+                height="64"
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/5d55dd74-9e13-45bb-b38e-7515a926145d?"
-                className=" aspect-[1.17] object-contain object-center w-full fill-white stroke-[1px] stroke-stone-300 overflow-hidden"
+                className="aspect-[1.17] object-contain object-center w-full fill-white stroke-[1px] stroke-stone-300 overflow-hidden"
               />
               <Link
                 to="/profile"
