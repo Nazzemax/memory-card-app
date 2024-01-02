@@ -73,25 +73,22 @@ const Header: React.FC = (): React.JSX.Element => {
           {isShowing ? (
             <div
               onMouseLeave={() => setIsShowing(false)}
-              className="transition ease-linear absolute shadow flex justify-center top-11 right-3"
+              className="transition ease-linear absolute shadow flex flex-col justify-evenly top-11 right-3
+              bg-[url('https://cdn.builder.io/api/v1/image/assets/TEMP/5d55dd74-9e13-45bb-b38e-7515a926145d?')]
+              w-[122px] h-[104px] fill-white stroke-[1px] stroke-stone-300 overflow-hidden"
             >
-              <img
-                loading="lazy"
-                width="75"
-                height="64"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/5d55dd74-9e13-45bb-b38e-7515a926145d?"
-                className="aspect-[1.17] object-contain object-center w-full fill-white stroke-[1px] stroke-stone-300 overflow-hidden"
-              />
               <Link
                 to="/profile"
-                className="z-10 stroke-black hover:stroke-red-500 hover:text-red-500 cursor-pointer space-x-1 pt-3 right-2 absolute flex justify-between items-center"
+                className="z-10 stroke-black hover:stroke-red-500 hover:text-red-500
+                   cursor-pointer flex items-center justify-between mr-[28px] ml-[20px]"
               >
                 <ProfileIcon className="" />
-                <div className="w-11 text-sm">Profile</div>
+                <div className="w-11 ml-3 text-sm">Profile</div>
               </Link>
               <button
                 onClick={handleLogout}
-                className="stroke-black hover:stroke-red-500 hover:text-red-500 cursor-pointer z-10 space-x pt-4 right-0 absolute top-6 flex justify-between items-center"
+                className="stroke-black hover:stroke-red-500 hover:text-red-500 cursor-pointer 
+                z-10 flex items-center justify-between mr-[20px] ml-[20px]"
               >
                 <LogoutIcon />
                 <div className="w-14 text-sm">Log out</div>
