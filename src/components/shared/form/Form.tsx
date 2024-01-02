@@ -96,7 +96,12 @@ const Form: React.FC<{ formType: "login" | "register" }> = ({ formType }) => {
           }
         >
           <FormHeader formType={formType} />
-          <EmailInput register={register} val={email} setEmail={setEmail} />
+          <EmailInput 
+            register={register} 
+            val={email}
+            setEmail={setEmail}
+            errors={errors}
+             />
 
           <PasswordInput
             register={register}

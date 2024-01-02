@@ -13,7 +13,7 @@ const PasswordError: React.FC<{
 
       {errors?.password && (
         <span className="text-red-600 font-bold text-1xl">
-          {error || errors?.password.message}
+          {errors?.password.message || error}
         </span>
       )}
     </>
