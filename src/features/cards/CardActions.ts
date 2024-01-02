@@ -110,3 +110,17 @@ export const updateCard = createAsyncThunk(
       }
     }
   );
+
+  export const updateGrade = createAsyncThunk(
+    'put/cards/grade',
+    async ({grade, cardsPack_id}:ICards, thunkApi) => {
+      try {
+        const result = await axios.put(`/cards/card`, { grade, cardsPack_id});
+        return result.data;
+      } catch (e) {
+        return thunkApi.rejectWithValue(e);
+      }
+    }
+  );
+
+

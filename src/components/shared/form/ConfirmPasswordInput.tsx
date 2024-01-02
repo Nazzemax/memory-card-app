@@ -23,8 +23,8 @@ const ConfirmPasswordInput: React.FC<PasswordInputProps> = ({
 
   return (
   
-      <label htmlFor="secondPassword" className="text-sm opacity-50 ml-10 pt-6 relative">
-        Password
+      <label htmlFor="secondPassword" className="text-sm opacity-50 ml-10 pt-6 pb-14 relative">
+        Confirm Password
         <input
           {...register("secondPassword", confirmPasswordValidationRules)}
           type={showPassword ? 'text':'password'}

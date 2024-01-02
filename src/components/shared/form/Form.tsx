@@ -30,8 +30,8 @@ const Form: React.FC<{ formType: "login" | "register" }> = ({ formType }) => {
     useAuthSelectors();
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("rus@gmail.com");
-  const [password, setPassword] = useState<string>("Keiin2022!@#");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [secondPassword, setSecondPassword] = useState<string>("");
 
@@ -96,7 +96,12 @@ const Form: React.FC<{ formType: "login" | "register" }> = ({ formType }) => {
           }
         >
           <FormHeader formType={formType} />
-          <EmailInput register={register} val={email} setEmail={setEmail} />
+          <EmailInput 
+            register={register} 
+            val={email}
+            setEmail={setEmail}
+            errors={errors}
+             />
 
           <PasswordInput
             register={register}

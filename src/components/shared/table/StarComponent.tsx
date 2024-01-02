@@ -9,7 +9,7 @@ const StarComponent: React.FC<{
 
   return (
     <div>
-      {[...Array(6)].map((_star, index) => {
+      {[...Array(5)].map((_star, index) => {
         index += 1;
         const isFullStar = index <= (hover || rating);
         const isHalfStar = hover > rating && index - 0.5 === hover;

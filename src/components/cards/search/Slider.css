@@ -1,0 +1,41 @@
+.slider {
+  width: 100%;
+  max-width: 10rem;
+  height: 5px;
+  min-width: 10rem;
+}
+
+.slider .thumb {
+  text-align: center;
+  background-color: #366EFF;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.track {
+  position: relative;
+  background: #366EFF;
+  opacity: 0.5;
+}
+
+.track-1 {
+  background: #366EFF;
+  opacity: 1;
+}
+
+.track-2 {
+  background: #366EFF;
+  opacity: 0.5;
+}
+
+.slider .track {
+  top: 0px;
+  height: 5px;
+}
+
+.slider .thumb {
+  top: -5.8px;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+}/*# sourceMappingURL=Slider.css.map */
