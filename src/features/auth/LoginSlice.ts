@@ -9,11 +9,11 @@ import { PURGE } from "redux-persist";
 
 const initialState: LoginState = {
   user: {
-    user:{
+    user: {
       _id: '',
       email: '',
       name: '',
-      avatar:'',
+      avatar: '',
       publicCardPacksCount: 0,
       created: '',
       updated: '',
@@ -28,10 +28,10 @@ const initialState: LoginState = {
   email: '',
   rememberMe: false,
   error: '',
-  isLogout:false
+  isLogout: false
 }
 
-const loginSlice:Slice = createSlice({
+const loginSlice: Slice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
@@ -42,12 +42,12 @@ const loginSlice:Slice = createSlice({
     setError: (state, action) => {
       state.user.error = action.payload;
     },
-    logoutUser: (state) => {    
+    logoutUser: (state) => {
       state.user.user = initialState.user
       state.user.isAuthenticated = false
       state.isLogout = true
     },
-    updateUser:(state, action) => {
+    updateUser: (state, action) => {
       state.user.user = action.payload;
       state.user.isAuthenticated = true;
     }
@@ -56,66 +56,60 @@ const loginSlice:Slice = createSlice({
     builder
       .addCase(login
         .pending, state => {
-          if(state.user) {
+          if (state.user) {
             state.user.isLoading = true;
             state.user.isAuthenticated = false;
           }
-         
+
         })
       .addCase(login
         .fulfilled, (state, action) => {
-          if(state.user) {
+          if (state.user) {
             state.user.isLoading = false;
             state.user.isAuthenticated = true;
             state.user.user = action.payload
             toast.success('Successfully logged in')
-          } 
+          }
         })
       .addCase(login
         .rejected, (state, action) => {
-          if(state.user) {
+          if (state.user) {
             state.user.isLoading = false;
             state.user.isAuthenticated = false;
             state.error = action.error.message
             toast.error('Your login or password is incorrect')
           }
-       
+
         })
       .addCase(logout.fulfilled, state => {
-        if(state.user) {
-          state.user.isAuthenticated = false;
-          state.user = initialState.user
-        }
+        state = { ...initialState, isLogout: true };
       })
-      .addCase(PURGE, (state) => {
-        if(state.user) {
-          state.user = initialState.user
-        }
-      })
+      .addCase(PURGE, () => initialState)
       .addCase(logout.rejected, (state, action) => {
-        if(state.user) {
+        if (state.user) {
           state.user.isAuthenticated = false
           state.user.isLoading = false
           state.error = action.error.message
         }
-      
+
       })
-     .addCase(updateProfile.pending, state => {
-      if(state.user) 
-        state.user.isLoading = true;
-      state.error = ''
-     })
-     .addCase(updateProfile.fulfilled, (state, action) => {
-       if(state.user)
-        state.user.isLoading = false
-        state.user = action.payload
-     })
-     .addCase(updateProfile.rejected, (state, action) => {
-      if(state.user) {
-        state.error = action.error.message;
-        state.user.isLoading = false;
-      }
-     })
+      .addCase(updateProfile.pending, state => {
+        if (state.user)
+          state.user.isLoading = true;
+        state.error = ''
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        if (state.user) {
+          state.user.isLoading = false;
+          state.user.user = action.payload;
+        }
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        if (state.user) {
+          state.error = action.error.message;
+          state.user.isLoading = false;
+        }
+      })
   }
 
 })
