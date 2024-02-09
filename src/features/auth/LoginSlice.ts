@@ -82,7 +82,9 @@ const loginSlice: Slice = createSlice({
 
         })
       .addCase(logout.fulfilled, state => {
-        state = { ...initialState, isLogout: true };
+        if(state.user) {
+          state = { ...initialState, isLogout: true };
+        }
       })
       .addCase(PURGE, () => initialState)
       .addCase(logout.rejected, (state, action) => {
