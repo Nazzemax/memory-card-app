@@ -25,7 +25,7 @@ const EmailInput: React.FC<{
       />
       <br />
       {errors.email?.type ==='required' && (
-        <span className="text-red-600 font-bold text-1xl">
+        <span className="text-red-600 block font-bold text-1xl">
           Email is required
         </span>
       ) }

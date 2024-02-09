@@ -28,7 +28,7 @@ const ConfirmPasswordInput: React.FC<PasswordInputProps> = ({
         <input
           {...register("secondPassword", confirmPasswordValidationRules)}
           type={showPassword ? 'text':'password'}
-          id="password"
+          id="secondPassword"
           className="w-80 h-8 border-opacity-20 enabled:opacity-100 font-medium border-b outline-none border-black"
           style={{ borderBottomWidth: "0.09888rem" }}
           onChange={(e) => {
